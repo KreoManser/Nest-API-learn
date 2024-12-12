@@ -2,8 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { CreateReviewDto } from 'src/review/dto/create-review.dto';
+import { CreateReviewDto } from '../src/review/dto/create-review.dto';
 import { disconnect, Types } from 'mongoose';
+import { REVIEW_NOT_FOUND } from '../src/review/review.constants';
 
 const productId = new Types.ObjectId().toHexString();
 
@@ -28,23 +29,62 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/review/create (POST)', async () => {
-    try {
-      // eslint-disable-next-line prettier/prettier
-      const response = await request(app.getHttpServer())
-        .post('/review/create')
-        .send(testDto);
+  it('/review/create (POST) - success', async () => {
+    return await request(app.getHttpServer())
+      .post('/review/create')
+      .send(testDto)
+      .expect(201)
+      .then(({ body }): request.Response => {
+        createdId = body._id;
+        expect(createdId).toBeDefined();
+        return;
+      });
+  });
 
-      console.log('Response body:', response.body);
-      console.log('Response status:', response.status);
+  it('/review/create (POST) - fail', async () => {
+    return await request(app.getHttpServer())
+      .post('/review/create')
+      .send({ ...testDto, rating: 0 })
+      .expect(400);
+  });
 
-      expect(response.status).toBe(201);
-      createdId = response.body._id;
-      expect(createdId).toBeDefined();
-    } catch (e) {
-      console.error('Ошибка в тесте:', e);
-      throw e;
-    }
+  it('/review/byProduct/:productId (GET) - success', async () => {
+    return await request(app.getHttpServer())
+      .get('/review/byProduct/' + productId)
+      .send(testDto)
+      .expect(200)
+      .then(({ body }: request.Response) => {
+        expect(body.length).toBe(1);
+        return;
+      });
+  });
+
+  it('/review/byProduct/:productId (GET) - failure', async () => {
+    return await request(app.getHttpServer())
+      .get('/review/byProduct/' + new Types.ObjectId().toHexString())
+      .send(testDto)
+      .expect(200)
+      .then(({ body }: request.Response) => {
+        expect(body.length).toBe(0);
+        return;
+      });
+  });
+
+  it('/review/:id (DELETE) - success', async () => {
+    return await request(app.getHttpServer())
+      .delete('/review/' + createdId)
+      .send(testDto)
+      .expect(200);
+  });
+
+  it('/review/:id (DELETE) - failure', async () => {
+    return await request(app.getHttpServer())
+      .delete('/review/' + new Types.ObjectId().toHexString())
+      .send(testDto)
+      .expect(404, {
+        statusCode: 404,
+        message: REVIEW_NOT_FOUND,
+      });
   });
 
   afterAll(() => {

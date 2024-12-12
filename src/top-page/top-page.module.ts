@@ -5,7 +5,6 @@ import { TopPageModel, TopPageSchema } from './models/top-page.model';
 
 @Module({
   controllers: [TopPageController],
-  // eslint-disable-next-line prettier/prettier
   imports: [
     MongooseModule.forFeature([
       {
