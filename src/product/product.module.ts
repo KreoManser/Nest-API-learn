@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ProductController } from './product.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ProductShema } from './models/product.model';
+import { ProductModel, ProductShema } from './models/product.model';
 
 @Module({
   controllers: [ProductController],
@@ -9,7 +9,7 @@ import { ProductShema } from './models/product.model';
   imports: [
     MongooseModule.forFeature([
       {
-        name: 'Product',
+        name: ProductModel.name,
         schema: ProductShema,
         collection: 'Product',
       },

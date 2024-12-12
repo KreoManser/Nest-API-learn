@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ReviewController } from './review.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ReviewSchema } from './models/review.model';
+import { ReviewModel, ReviewSchema } from './models/review.model';
 import { ReviewService } from './review.service';
 
 @Module({
@@ -9,7 +9,7 @@ import { ReviewService } from './review.service';
   imports: [
     MongooseModule.forFeature([
       {
-        name: 'Review',
+        name: ReviewModel.name,
         schema: ReviewSchema,
         collection: 'Review',
       },

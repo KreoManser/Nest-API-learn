@@ -1,4 +1,7 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
+
+export type ReviewDocument = HydratedDocument<TopPageModel>;
 
 export enum TopLevelCategory {
   Courses,
@@ -61,3 +64,5 @@ export class TopPageModel {
   @Prop([String])
   tags: string[];
 }
+
+export const TopPageSchema = SchemaFactory.createForClass(TopPageModel);
