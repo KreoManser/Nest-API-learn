@@ -1,12 +1,20 @@
 services:
-  top-api:
-    image: top-api:latest
-    container_name: top-api
+  top-api-git:
+    image: ghcr.io/kreomanser/nest-api:develop
+    container_name: top-api-git
     restart: always
+    platform: linux/amd64
     ports:
       - '3000:3000'
     volumes:
       - ./.env:/opt/app/.env
+    environment:
+      MONGO_LOGIN: ${MONGO_LOGIN}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_HOST: ${MONGO_HOST}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO_AUTHDATABASE: ${MONGO_AUTHDATABASE}
+      JWT_SECRET: ${JWT_SECRET}
     networks:
       - mongo_network
 
