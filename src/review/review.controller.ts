@@ -15,6 +15,7 @@ import { CreateReviewDto } from './dto/create-review.dto';
 import { ReviewService } from './review.service';
 import { REVIEW_NOT_FOUND } from './review.constants';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { IdValidtionPipe } from 'src/pipes/id-validation.pipe';
 
 @Controller('review')
 export class ReviewController {
@@ -32,7 +33,7 @@ export class ReviewController {
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id', IdValidtionPipe) id: string) {
     const deleteDoc = await this.reviewService.delete(id);
     if (!deleteDoc) {
       // eslint-disable-next-line prettier/prettier
@@ -41,7 +42,7 @@ export class ReviewController {
   }
 
   @Get('byProduct/:productId')
-  async getByProduct(@Param('productId') productId: string) {
+  async getByProduct(@Param('productId', IdValidtionPipe) productId: string) {
     return await this.reviewService.findByProductId(productId);
   }
 }
