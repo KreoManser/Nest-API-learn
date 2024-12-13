@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-export type ReviewDocument = HydratedDocument<TopPageModel>;
+export type TopPageDocument = HydratedDocument<TopPageModel>;
 
 export enum TopLevelCategory {
   Courses,
@@ -35,10 +35,10 @@ export class TopPageAdvantage {
 @Schema({ _id: true })
 export class TopPageModel {
   @Prop({ enum: TopLevelCategory })
-  firstLevel: TopLevelCategory;
+  firstCategory: TopLevelCategory;
 
   @Prop()
-  secondLevel: string;
+  secondCategory: string;
 
   @Prop({ unique: true })
   alias: string;
