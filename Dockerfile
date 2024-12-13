@@ -1,6 +1,6 @@
 FROM node:22-alpine
 WORKDIR /opt/top-api-app
-ADD packaje.json packaje.json
+ADD package.json package.json
 RUN npm install
 ADD . .
 RUN npm run build
