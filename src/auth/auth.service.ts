@@ -30,15 +30,15 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string): Promise<Pick<UserModel, 'email'>> {
-    const user = this.findUser(email);
+    const user = await this.findUser(email);
     if (!user) {
       throw new UnauthorizedException(USER_NOT_FOUND_ERROR);
     }
-    const isCorrectPassword = await compare(password, (await user).passwordHash);
+    const isCorrectPassword = await compare(password, user.passwordHash); // Access resolved user's passwordHash
     if (!isCorrectPassword) {
       throw new UnauthorizedException(WRONG_LOGIN_OR_PASSWORD_ERROR);
     }
-    return { email: (await user).email };
+    return { email: user.email };
   }
 
   async login(email: string) {
