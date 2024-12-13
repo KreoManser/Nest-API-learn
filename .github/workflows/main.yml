@@ -8,12 +8,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Publish to registy
-        uses: elgohr/Publish-Docker-Github-Action@master
+      - uses: actions/checkout@v3
+
+      - name: Log in to Docker registry
+        uses: docker/login-action@v2
         with:
-          registry: docker.pkg.github.com
-          name: https://github.com/KreoManser/Nest-API-learn/Nest-API
+          registry: ghcr.io
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          tags: 'develop'
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/kreomanser/nest-api:develop
