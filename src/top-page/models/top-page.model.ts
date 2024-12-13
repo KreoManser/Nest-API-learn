@@ -66,3 +66,4 @@ export class TopPageModel {
 }
 
 export const TopPageSchema = SchemaFactory.createForClass(TopPageModel);
+TopPageSchema.index({ '$**': 'text' });
