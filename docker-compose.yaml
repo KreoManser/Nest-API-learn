@@ -1,15 +1,15 @@
-version: '3'
 services:
-  top.api:
+  top-api:
     image: top-api:latest
     container_name: top-api
     restart: always
     ports:
-      - 3000:3000
+      - '3000:3000'
     volumes:
-      - ./.env:/opt/top-api-app.env
+      - ./.env:/opt/app/.env
     networks:
       - mongo_network
+
 networks:
   mongo_network:
     name: mongo_default
